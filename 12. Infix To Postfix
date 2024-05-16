@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <ctype.h>
+
+#define MAX_SIZE 100
+
+char stack[MAX_SIZE];
+int top = -1;
+
+void push(char item) {
+    stack[++top] = item;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int isOperator(char symbol) {
+    return (symbol == '+' || symbol == '-' || symbol == '*' || symbol == '/');
+}
+
+int precedence(char symbol) {
+    return (symbol == '+' || symbol == '-') ? 1 : (symbol == '*' || symbol == '/') ? 2 : 0;
+}
+
+int main() {
+    char infix[MAX_SIZE], postfix[MAX_SIZE];
+    printf("Enter an infix expression: ");
+    scanf("%s", infix);
+
+    int i = 0, j = 0;
+    char symbol;
+
+    while ((symbol = infix[i++]) != '\0') {
+        if (isalnum(symbol))
+            postfix[j++] = symbol;
+        else if (symbol == '(')
+            push(symbol);
+        else if (symbol == ')') {
+            while (stack[top] != '(')
+                postfix[j++] = pop();
+            top--; // Discard '('
+        } else {
+            while (top != -1 && precedence(stack[top]) >= precedence(symbol))
+                postfix[j++] = pop();
+            push(symbol);
+        }
+    }
+
+    while (top != -1)
+        postfix[j++] = pop();
+    postfix[j] = '\0';
+
+    printf("Postfix expression: %s\n", postfix);
+
+    return 0;
+}
