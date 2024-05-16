@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+#define MAX_SIZE 5
+
+int stack[MAX_SIZE];
+int top = -1;
+
+int main() {
+for (int i = 1; i <= 5; ++i) {
+        if (top == MAX_SIZE - 1) {
+            printf("Stack Overflow!\n");
+            break;
+        }
+        stack[++top] = i * 10;
+        printf("%d pushed to the stack.\n", i * 10);
+    }
+
+if (top == -1) {
+        printf("Stack is empty!\n");
+    } else {
+        printf("Top element of the stack: %d\n", stack[top]);
+    }
+
+  while (top != -1) {
+        printf("%d popped from the stack.\n", stack[top]);
+        top--;
+    }
+if (top == -1) {
+        printf("Stack is already empty!\n");
+    }
+
+    return 0;
+}
