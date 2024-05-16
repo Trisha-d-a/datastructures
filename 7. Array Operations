@@ -1,0 +1,63 @@
+display array operations pgm 7:
+
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+int main() {
+    int arr[MAX_SIZE], size, i, pos, value;
+
+    printf("Enter the size of the array: ");
+    scanf("%d", &size);
+
+    printf("Enter %d elements:\n", size);
+    for (i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Array elements: ");
+    for (i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    printf("Enter 1 to insert, 2 to delete, 3 to display: ");
+    int choice;
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            printf("Enter the position and value to insert: ");
+            scanf("%d %d", &pos, &value);
+            for (i = size; i >= pos; i--) {
+                arr[i] = arr[i - 1];
+            }
+            arr[pos - 1] = value;
+            size++;
+            break;
+
+        case 2:
+            printf("Enter the position to delete: ");
+            scanf("%d", &pos);
+            for (i = pos - 1; i < size - 1; i++) {
+                arr[i] = arr[i + 1];
+            }
+            size--;
+            break;
+
+        case 3:
+            break;
+
+        default:
+            printf("Invalid choice!\n");
+            return 1;
+    }
+
+    printf("Array elements: ");
+    for (i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
