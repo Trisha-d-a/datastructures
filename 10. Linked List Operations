@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+int main() {
+  Node* head = NULL;
+Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = 10;
+    newNode->next = head;
+    head = newNode;
+
+    newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = 20;
+    newNode->next = head;
+    head = newNode;
+
+    newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = 30;
+    newNode->next = head;
+    head = newNode;
+
+ Node* temp = head;
+    printf("Linked list elements: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+
+  while (head != NULL) {
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    return 0;
+}
