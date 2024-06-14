@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    int stack[n * 2], top = -1;
+    
+    stack[++top] = 0;
+    stack[++top] = n - 1;
+
+    while (top >= 0) {
+        int h = stack[top--], l = stack[top--];
+        int pivot = arr[h], i = l - 1;
+
+        for (int j = l; j <= h - 1; j++)
+            if (arr[j] < pivot) arr[++i] ^= arr[j] ^= arr[i] ^= arr[j];
+
+        arr[i + 1] ^= arr[h] ^= arr[i + 1] ^= arr[h];
+
+        if (i > l) stack[++top] = l, stack[++top] = i;
+        if (i + 2 < h) stack[++top] = i + 2, stack[++top] = h;
+    }
+
+    printf("Sorted array: \n");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    printf("\n");
+
+    return 0;
+}
