@@ -1,1 +1,33 @@
+#include <stdio.h>
+
+int main() {
+    int graph[6][6] = {{0, 1, 1, 0, 0, 0},
+                       {1, 0, 0, 1, 1, 0},
+                       {1, 0, 0, 0, 1, 0},
+                       {0, 1, 0, 0, 1, 1},
+                       {0, 1, 1, 1, 0, 1},
+                       {0, 0, 0, 1, 1, 0}};
+    int visited[6] = {0};
+    int stack[100], top = -1;
+
+    stack[++top] = 0;
+    visited[0] = 1;
+    printf("Visited 0\n");
+
+    while (top != -1) {
+        int v = stack[top], found = 0;
+        for (int i = 0; i < 6; ++i) {
+            if (graph[v][i] && !visited[i]) {
+                stack[++top] = i;
+                visited[i] = 1;
+                printf("Visited %d\n", i);
+                found = 1;
+                break;
+            }
+        }
+        if (!found) --top;
+    }
+
+    return 0;
+}
 
