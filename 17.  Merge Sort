@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+int main() {
+    int arr[MAX_SIZE], temp[MAX_SIZE], n;
+    
+    printf("Enter size of array: ");
+    scanf("%d", &n);
+    
+    printf("Enter elements of array:\n");
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+    
+    for (int cs = 1; cs <= n - 1; cs *= 2) 
+        for (int ls = 0; ls < n - 1; ls += 2 * cs) {
+            int m = ls + cs - 1, r = (ls + 2 * cs - 1 < n - 1) ? ls + 2 * cs - 1 : n - 1;
+            int l = ls, ri = m + 1, k = l;
+            while (l <= m && ri <= r) temp[k++] = (arr[l] <= arr[ri]) ? arr[l++] : arr[ri++];
+            while (l <= m) temp[k++] = arr[l++];
+            while (ri <= r) temp[k++] = arr[ri++];
+            for (int i = ls; i <= r; i++) arr[i] = temp[i];
+        }
+
+    printf("Sorted array: \n");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    printf("\n");
+
+    return 0;
+}
