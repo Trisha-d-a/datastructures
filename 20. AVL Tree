@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int height(int* N) { return N ? N[3] : 0; }
+int max(int a, int b) { return a > b ? a : b; }
+
+int* newNode(int key) {
+    int* node = (int*)malloc(4 * sizeof(int));
+    node[0] = key; node[1] = node[2] = NULL; node[3] = 1;
+    return node;
+}
+
+int* rightRotate(int* y) { int* x = y[1], * T2 = x[2]; x[2] = y, y[1] = T2; y[3] = max(height(y[1]), height(y[2])) + 1; x[3] = max(height(x[1]), height(x[2])) + 1; return x; }
+int* leftRotate(int* x) { int* y = x[2], * T2 = y[1]; y[1] = x, x[2] = T2; x[3] = max(height(x[1]), height(x[2])) + 1; y[3] = max(height(y[1]), height(y[2])) + 1; return y; }
+int getBalance(int* N) { return N ? height(N[1]) - height(N[2]) : 0; }
+
+int* insert(int* n, int k) {
+    if (!n) return newNode(k);
+    if (k < n[0]) n[1] = insert(n[1], k);
+    else if (k > n[0]) n[2] = insert(n[2], k);
+    else return n;
+    n[3] = 1 + max(height(n[1]), height(n[2]));
+    int b = getBalance(n);
+    if (b > 1 && k < n[1][0]) return rightRotate(n);
+    if (b < -1 && k > n[2][0]) return leftRotate(n);
+    if (b > 1 && k > n[1][0]) { n[1] = leftRotate(n[1]); return rightRotate(n); }
+    if (b < -1 && k < n[2][0]) { n[2] = rightRotate(n[2]); return leftRotate(n); }
+    return n;
+}
+
+int* minValueNode(int* n) {
+    int* current = n;
+    while (current[1]) current = current[1];
+    return current;
+}
+
+int* deleteNode(int* r, int k) {
+    if (!r) return r;
+    if (k < r[0]) r[1] = deleteNode(r[1], k);
+    else if (k > r[0]) r[2] = deleteNode(r[2], k);
+    else {
+        if (!r[1] || !r[2]) {
+            int* temp = r[1] ? r[1] : r[2];
+            if (!temp) { temp = r; r = NULL; }
+            else *r = *temp;
+            free(temp);
+        } else {
+            int* temp = minValueNode(r[2]);
+            r[0] = temp[0];
+            r[2] = deleteNode(r[2], temp[0]);
+        }
+    }
+    if (!r) return r;
+    r[3] = 1 + max(height(r[1]), height(r[2]));
+    int b = getBalance(r);
+    if (b > 1 && getBalance(r[1]) >= 0) return rightRotate(r);
+    if (b > 1 && getBalance(r[1]) < 0) { r[1] = leftRotate(r[1]); return rightRotate(r); }
+    if (b < -1 && getBalance(r[2]) <= 0) return leftRotate(r);
+    if (b < -1 && getBalance(r[2]) > 0) { r[2] = rightRotate(r[2]); return leftRotate(r); }
+    return r;
+}
+
+int* search(int* r, int k) {
+    if (!r || r[0] == k) return r;
+    if (r[0] < k) return search(r[2], k);
+    return search(r[1], k);
+}
+
+void preOrder(int* r) { if (r) { printf("%d ", r[0]); preOrder(r[1]); preOrder(r[2]); } }
+
+int main() {
+    int* root = NULL;
+    root = insert(root, 10); root = insert(root, 20); root = insert(root, 30); root = insert(root, 40); root = insert(root, 50); root = insert(root, 25);
+    printf("Preorder traversal of the AVL tree after insertion:\n"); preOrder(root); printf("\n");
+    root = deleteNode(root, 20);
+    printf("Preorder traversal of the AVL tree after deletion:\n"); preOrder(root); printf("\n");
+    int k = 30; int* search_result = search(root, k);
+    if (search_result) printf("Key %d found in the AVL tree.\n", k); else printf("Key %d not found in the AVL tree.\n", k);
+    return 0;
+}
